@@ -4,18 +4,14 @@ const { program } = require("commander");
 const fs = require("fs");
 const usersFile = "users.json";
 
-// Initialize the user file if it doesn't exist
 if (!fs.existsSync(usersFile)) {
     fs.writeFileSync(usersFile, "[]", "utf8");
 }
 
-// Load existing users
 const loadUsers = () => JSON.parse(fs.readFileSync(usersFile, "utf8"));
 
-// Save users to file
 const saveUsers = (users) => fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), "utf8");
 
-// Create user
 program
   .command("user:create")
   .description("Create a new user")
@@ -28,7 +24,6 @@ program
     console.log(`User ${options.fname} ${options.lname} created.`);
   });
 
-// List all users
 program
   .command("user:list")
   .description("List all users")
@@ -41,7 +36,6 @@ program
     }
   });
 
-// Delete user by first name
 program
   .command("user:delete")
   .description("Delete a user by first name")
@@ -66,7 +60,6 @@ program
     }
   });
 
-// Update user by first name
 program
   .command("user:update")
   .description("Update a user's details by first name")
@@ -89,7 +82,6 @@ program
     console.log(`User updated: ${users[index].fname} ${users[index].lname}`);
   });
 
-// Set up version and parsing
 program.version("1.0.0");
 
 program.parse(process.argv);
