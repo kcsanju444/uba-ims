@@ -52,9 +52,9 @@ program
     const originalCount = users.length;
 
     if (options.all) {
-      users = users.filter(user => user.fname !== options.fname);
+      users = users.filter(user => user.fname.toLowerCase() !== options.fname.toLowerCase());
     } else {
-      const index = users.findIndex(user => user.fname === options.fname);
+      const index = users.findIndex(user => user.fname.toLowerCase() === options.fname.toLowerCase());
       if (index !== -1) users.splice(index, 1);
     }
 
@@ -66,5 +66,30 @@ program
     }
   });
 
+// Update user by first name
+program
+  .command("user:update")
+  .description("Update a user's details by first name")
+  .requiredOption("--fname <Name>", "Existing First Name")
+  .option("--newFname <NewName>", "New First Name")
+  .option("--newLname <NewSurname>", "New Last Name")
+  .action((options) => {
+    let users = loadUsers();
+    const index = users.findIndex(user => user.fname.toLowerCase() === options.fname.toLowerCase());
+
+    if (index === -1) {
+      console.log(`No user found with first name: ${options.fname}`);
+      return;
+    }
+
+    if (options.newFname) users[index].fname = options.newFname;
+    if (options.newLname) users[index].lname = options.newLname;
+
+    saveUsers(users);
+    console.log(`User updated: ${users[index].fname} ${users[index].lname}`);
+  });
+
 // Set up version and parsing
-program.version("1.0.0").parse(process.argv);
+program.version("1.0.0");
+
+program.parse(process.argv);
